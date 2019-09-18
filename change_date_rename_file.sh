@@ -21,23 +21,25 @@ echo "Type the directory path for the files that need changed dates & filenames:
 read dirname
 echo "You typed: " $dirname
 
+test_dirname = "/Users/kimlew/Sites.bu/bash_projects/test_run"
+test_filename = "IMG_0059.jpg"
+
 # while read filename; do
 # datestring_for_filename = 
 # datestring_for_date = 
 
 identify -format '%[EXIF:DateTimeOriginal]' \
-$test_path/IMG_0059.jpg \
+$test_path/$test_filename \
 | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g' \
 | tee $test_path/date_manipulation/DateTimeOriginalForFilename.txt
 
 identify -format '%[EXIF:DateTimeOriginal]' \
-$test_path/IMG_0059.jpg \
+$test_path/$test_filename \
 | sed -e 's/://g' -e 's/ //g' -E -e 's/(..)$/\.\1/' \
 | tee $test_path/date_manipulation/DateTimeOriginalForDate.txt
 
-# TODO
-# touch -t 201509020709 IMG_0059.jpg
-# touch -t 20150902070903 IMG_0059.jpg
+# TODO: touch -t 201509020709.03 $test_dirname\IMG_0059.jpg
+# TODO: Replace in filename IMG_ with $datestring_for_filename.
 
 # done
 
