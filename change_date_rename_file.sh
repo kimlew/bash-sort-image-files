@@ -22,15 +22,22 @@ read dirname
 echo "You typed: " $dirname
 
 # while read filename; do
-identify -format '%[EXIF:DateTimeOriginal]' \
-$test_path/IMG_0059.jpg \
-| sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g' \
-> $test_path/date_manipulation/DateTimeOriginalForFilename.txt
+# datestring_for_filename = 
+# datestring_for_date = 
 
 identify -format '%[EXIF:DateTimeOriginal]' \
 $test_path/IMG_0059.jpg \
-| sed -e 's/://g' -e 's/ //g' \
-> $test_path/date_manipulation/DateTimeOriginalForDate.txt
+| sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g' \
+| tee $test_path/date_manipulation/DateTimeOriginalForFilename.txt
+
+identify -format '%[EXIF:DateTimeOriginal]' \
+$test_path/IMG_0059.jpg \
+| sed -e 's/://g' -e 's/ //g' -E -e 's/(..)$/\.\1/' \
+| tee $test_path/date_manipulation/DateTimeOriginalForDate.txt
+
+# TODO
+# touch -t 201509020709 IMG_0059.jpg
+# touch -t 20150902070903 IMG_0059.jpg
 
 # done
 
