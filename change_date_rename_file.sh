@@ -25,7 +25,13 @@ echo "You typed: " $dirname
 identify -format '%[EXIF:DateTimeOriginal]' \
 $test_path/IMG_0059.jpg \
 | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g' \
-> $test_path/date_manipulation/aDateTimeOriginal2.txt
+> $test_path/date_manipulation/DateTimeOriginalForFilename.txt
+
+identify -format '%[EXIF:DateTimeOriginal]' \
+$test_path/IMG_0059.jpg \
+| sed -e 's/://g' -e 's/ //g' \
+> $test_path/date_manipulation/DateTimeOriginalForDate.txt
+
 # done
 
 exit 0
