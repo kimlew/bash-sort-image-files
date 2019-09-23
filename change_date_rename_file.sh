@@ -15,26 +15,28 @@
 #
 # Kim Lew
 
-test_path=/Users/kimlew/Documents/PHOTOS/2019/iPhone_photos_2019-Jan-01-Jul-30
-
 echo "Type the directory path for the files that need changed dates & filenames: "
-read dirname
-echo "You typed: " $dirname
+read directory_path
+echo "You typed: " $directory_path
 
-test_dirname = "/Users/kimlew/Sites.bu/bash_projects/test_run"
-test_filename = "IMG_0059.jpg"
+#original_path=/Users/kimlew/Documents/PHOTOS/2019/iPhone_photos_2019-Jan-01-Jul-30
+directory_name="/Users/kimlew/Sites/bash_projects/test_run"
+file_name="IMG_0061.jpg" # IMG_0059.jpg
 
 # TODO: Add loop - to process entire given directory.
 # while read filename; do
-# datestring_for_filename = 
-# datestring_for_date = 
+# date_for_date_change= 
+# date_for_filename_change= 
 
 # Change filesystem date to EXIF photo-taken date. 
 identify -format '%[EXIF:DateTimeOriginal]' \
-$test_path/$test_filename \
+$directory_name/$file_name \
 | sed -e 's/://g' -e 's/ //g' -E -e 's/(..)$/\.\1/' \
-| tee $test_path/date_manipulation/DateTimeOriginalForDate.txt
+| tee $directory_name/date_manipulation/date_for_date_change.txt
 
+# Save partial output of tee in variable, date_for_date_change.
+
+# touch -t 201509020709.06 $test_dirname/$test_filename
 # TODO: Replace with: touch -t 201509020709.03 $test_dirname\IMG_0059.jpg
 # NEED: Variable with date string for date change.
 # Shows OK in Finder. 
@@ -42,9 +44,9 @@ $test_path/$test_filename \
 
 # Use EXIF photo-taken date, change format and use as part of filename. 
 identify -format '%[EXIF:DateTimeOriginal]' \
-$test_path/$test_filename \
+$directory_name/$file_name \
 | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g' \
-| tee $test_path/date_manipulation/DateTimeOriginalForFilename.txt
+| tee $directory_name/date_manipulation/date_for_filename_change.txt
 
 # TODO: Replace in filename IMG_ with $datestring_for_filename.
 # NEED: Variable with date string for filename change.
