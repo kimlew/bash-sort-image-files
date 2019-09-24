@@ -21,27 +21,28 @@ echo "You typed: " $directory_path
 
 #original_path=/Users/kimlew/Documents/PHOTOS/2019/iPhone_photos_2019-Jan-01-Jul-30
 directory_name="/Users/kimlew/Sites/bash_projects/test_run"
-file_name="IMG_0061.jpg" # IMG_0059.jpg
+file_name="IMG_0059.jpg" # IMG_0061.jpg
 
 # TODO: Add loop - to process entire given directory.
 # while read filename; do
 
 # Change filesystem date to EXIF photo-taken date.
-# Save partial output of tee in variable, date_for_date_change.
+# Save command chain output in variable, date_for_date_change.
 date_for_date_change=$(identify -format '%[EXIF:DateTimeOriginal]' \
 $directory_name/$file_name \
 | sed -e 's/://g' -e 's/ //g' -E -e 's/(..)$/\.\1/' \
 | tee $directory_name/date_manipulation/date_for_date_change.txt)
+# TODO: Remove tee command when done project. Only for Kim's confirmation.
 
-# TODO: Replace with: touch -t 201509020709.03 $test_dirname\IMG_0059.jpg
-# touch -t 201509020709.06 $test_dirname/$test_filename
+touch -t $date_for_date_change $directory_name/$file_name
 
 # Use EXIF photo-taken date, change format and use as part of filename.
-# Save partial output of tee in variable, date_for_filename_change.
+# Save  command chain output in variable, date_for_filename_change.
 date_for_filename_change=$(identify -format '%[EXIF:DateTimeOriginal]' \
 $directory_name/$file_name \
 | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g' \
 | tee $directory_name/date_manipulation/date_for_filename_change.txt)
+# TODO: Remove tee command when done project. Only for Kim's confirmation.
 
 # TODO: Replace in filename IMG_ with $datestring_for_filename.
 
