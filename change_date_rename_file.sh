@@ -1,6 +1,7 @@
 #! /usr/bin/env bash
 #
-# change_dates_rename_files.sh
+# change_dates_rename_files.sh - You MUST have sudo permissions & run
+# this script with sudo.
 #
 # Command-line bash script to change download date to photo-taken date & 
 # add photo-taken date to filename. Takes in 1 command-line parameter, 
