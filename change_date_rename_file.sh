@@ -21,12 +21,13 @@ echo "You typed: " $directory_path
 
 #original_path=/Users/kimlew/Documents/PHOTOS/2019/iPhone_photos_2019-Jan-01-Jul-30
 directory_name="/Users/kimlew/Sites/bash_projects/test_run"
-file_name="IMG_0060.jpg" # IMG_0061.jpg
+file_name="IMG_0059.jpg" # IMG_0061.jpg
 
 # TODO: Add loop - to process entire given directory.
 # while read filename; do
 
-# Change filesystem date to EXIF photo-taken date.
+# -- Filesystem/OS Date Change --
+# Change filesystem date to EXIF photo-taken date, EXIF:DateTimeOriginal.
 # Save command chain output in variable, date_for_date_change.
 date_for_date_change=$(identify -format '%[EXIF:DateTimeOriginal]' \
 $directory_name/$file_name \
@@ -37,7 +38,8 @@ $directory_name/$file_name \
 # Test with: echo touch -t $date_for_date_change $directory_name/$file_name
 touch -t $date_for_date_change $directory_name/$file_name
 
-# Use EXIF photo-taken date, change format and use as part of filename.
+# -- Filename Change that includes Date --
+# Use EXIF photo-taken date, EXIF:DateTimeOriginal, change format & use in filename.
 # Save  command chain output in variable, date_for_filename_change.
 date_for_filename_change=$(identify -format '%[EXIF:DateTimeOriginal]' \
 $directory_name/$file_name \
@@ -45,7 +47,19 @@ $directory_name/$file_name \
 | tee $directory_name/date_manipulation/date_for_filename_change.txt)
 # TODO: Remove tee command when done project. Only for Kim's confirmation.
 
-# TODO: Replace in filename IMG_ with $datestring_for_filename.
+# Replace IMG_ in filename with value in $datestring_for_filename.
+#                                     sed -i "s/$var1/ZZ/g" "$file"
+#find $1 -type f |
+#while read afile
+#echo "date_for_filename_change is: " $date_for_filename_change
+#echo sed "s/IMG/$date_for_filename_change/" "$file_name"
+  new_file_name=$(echo "$file_name" | sed "s/IMG/$date_for_filename_change/")
+  mv $directory_name/$file_name $directory_name/$new_file_name
+  
+#do 
+#echo 'Given file_name is: ' $file_name 
+#echo 'new_file_name is: ' $new_file_name
+#done
 
 # done
 
