@@ -1,7 +1,6 @@
 #! /usr/bin/env bash
 #
-# change_dates_rename_files.sh - You MUST have sudo permissions & run
-# this script with sudo.
+# change_dates_rename_files.sh
 #
 # Command-line bash script to change download date to photo-taken date & 
 # add photo-taken date to filename. Takes in 1 command-line parameter, 
@@ -22,7 +21,7 @@ echo "You typed: " $directory_path
 
 #original_path=/Users/kimlew/Documents/PHOTOS/2019/iPhone_photos_2019-Jan-01-Jul-30
 directory_name="/Users/kimlew/Sites/bash_projects/test_run"
-file_name="IMG_0059.jpg" # IMG_0061.jpg
+file_name="IMG_0060.jpg" # IMG_0061.jpg
 
 # TODO: Add loop - to process entire given directory.
 # while read filename; do
@@ -35,6 +34,7 @@ $directory_name/$file_name \
 | tee $directory_name/date_manipulation/date_for_date_change.txt)
 # TODO: Remove tee command when done project. Only for Kim's confirmation.
 
+# Test with: echo touch -t $date_for_date_change $directory_name/$file_name
 touch -t $date_for_date_change $directory_name/$file_name
 
 # Use EXIF photo-taken date, change format and use as part of filename.
