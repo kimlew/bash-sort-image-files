@@ -17,6 +17,12 @@ echo "Type the directory path for the files that need changed dates & filenames:
 read directory_path
 echo "You typed: " $directory_path
 
+if [ ! -d $directory_path ] 
+then
+    echo "This directory does NOT exist." 
+    exit 9999 # die with error code 9999
+fi
+
 #original_path=/Users/kimlew/Documents/PHOTOS/2019/iPhone_photos_2019-Jan-01-Jul-30
 #directory_name="/Users/kimlew/Sites/bash_projects/test_run"
 #file_name="IMG_0059.jpg" # IMG_0061.jpg
