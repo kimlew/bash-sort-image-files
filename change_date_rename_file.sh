@@ -23,6 +23,9 @@ then
     exit 9999 # die with error code 9999
 fi
 
+echo "Date changes and filename changes in progress..."
+echo
+
 # Loop that processes entire given directory.
 find $directory_path -type f |
 while read a_file_name; do
