@@ -24,8 +24,9 @@ then
 fi
 
 if ! which identify > /dev/null; then
-  echo "You are missing the identify program that is part of the ImageMagick software suite."
-  echo "Install ImageMagick with your package manager. Or see: https://imagemagick.org/index.php"
+  echo "Error: You are missing the identify program that is part of the"
+  echo "ImageMagick software suite. Install ImageMagick with your package manager."
+  echo "Or see: https://imagemagick.org/index.php/"
   echo "Then re-run this script."
   exit 9999 # die with error code 9999
 fi
