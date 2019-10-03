@@ -4,9 +4,9 @@
 #
 # Brief: Command-line Bash script to change Creation Date & Modified Date that  
 # are currently download date to photo-taken date. The script also adds
-# photo-taken date to the filename. These changes will make file sorting  
-# easier. Takes in 1 command-line parameter, directory_path, the location of 
-# the files.
+# photo-taken date to the filename, e.g., 2015-09-02_07-09_0059.jpg.
+# These changes will make file sorting easier. Takes in 1 command-line 
+# parameter, directory_path, the location of the files.
 #
 # Note: Photo-taken date is exif:DateTimeOriginal.
 # Note: Script processes only a single directory. 
@@ -53,16 +53,21 @@ while read a_file_name; do
 
   ### Filename Change that includes Date ###
   # Use EXIF photo-taken date, EXIF:DateTimeOriginal, change format & use in filename.
-  # Save command chain output in variable, date_for_filename_change.
-  date_for_filename_change=$(identify -format '%[EXIF:DateTimeOriginal]' \
-  $a_file_name \
-  | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g')
+  # 1. Replace last 3 chars, e.g., :17	With: nothing
+  # 2. Replace ALL : 	With: -
+  # 3. Replace ALL spaces  With: _
+  # | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g')
+  
+  date_for_filename_change=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
+  
+  date_for_filename_change="${date_for_filename_change/${date_for_filename_change: -3}}"
+  date_for_filename_change="${date_for_filename_change//:/-}"
+  date_for_filename_change="${date_for_filename_change/ /_}"
 
-  # Replace IMG_ in filename with value in $datestring_for_filename, which is
+  # Replace IMG in filename with value in $datestring_for_filename, which is
   # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
-  new_file_name=$(echo "$a_file_name" | sed "s/IMG/$date_for_filename_change/")
-  mv $a_file_name $new_file_name 
-
+  new_file_name="${a_file_name/IMG/$date_for_filename_change}"
+  mv $a_file_name $new_file_name
 done
 echo "Done."
 
