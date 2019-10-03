@@ -37,15 +37,15 @@ echo "..."
 # Loop that processes entire given directory.
 find $directory_path -type f |
 while read a_file_name; do
+  exif_date=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
+
   ### Filesystem/OS Date Change ###
   # Change filesystem date to EXIF photo-taken date, EXIF:DateTimeOriginal.
   # 1. Replace ALL occurrences of : 	With: nothing
   # 2. Replace 1st occurrence of space 	With: nothing
   # 3. Replace last 2 char at end	  With: A literal . plus last 2 char at end.
   
-  date_for_date_change=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
-  
-  date_for_date_change="${date_for_date_change//:/}"
+  date_for_date_change="${exif_date//:/}"
   date_for_date_change="${date_for_date_change/ /}"
   date_for_date_change="${date_for_date_change/${date_for_date_change: -2}/\.${date_for_date_change: -2}}"
 
@@ -57,10 +57,8 @@ while read a_file_name; do
   # 2. Replace ALL : 	With: -
   # 3. Replace ALL spaces  With: _
   # | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g')
-  
-  date_for_filename_change=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
-  
-  date_for_filename_change="${date_for_filename_change/${date_for_filename_change: -3}}"
+    
+  date_for_filename_change="${exif_date/${exif_date: -3}}"
   date_for_filename_change="${date_for_filename_change//:/-}"
   date_for_filename_change="${date_for_filename_change/ /_}"
 
