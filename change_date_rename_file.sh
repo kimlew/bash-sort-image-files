@@ -39,12 +39,16 @@ find $directory_path -type f |
 while read a_file_name; do
   ### Filesystem/OS Date Change ###
   # Change filesystem date to EXIF photo-taken date, EXIF:DateTimeOriginal.
-  # Save command chain output in variable, date_for_date_change.
-  date_for_date_change=$(identify -format '%[EXIF:DateTimeOriginal]' \
-  $a_file_name \
-  | sed -e 's/://g' -e 's/ //g' -E -e 's/(..)$/\.\1/')
+  # 1. Replace ALL occurrences of : 	With: nothing
+  # 2. Replace 1st occurrence of space 	With: nothing
+  # 3. Replace last 2 char at end	  With: A literal . plus last 2 char at end.
+  
+  date_for_date_change=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
+  
+  date_for_date_change="${date_for_date_change//:/}"
+  date_for_date_change="${date_for_date_change/ /}"
+  date_for_date_change="${date_for_date_change/${date_for_date_change: -2}/\.${date_for_date_change: -2}}"
 
-  # Test with: echo touch -t $date_for_date_change $directory_path/$file_name
   touch -t $date_for_date_change $a_file_name
 
   ### Filename Change that includes Date ###
