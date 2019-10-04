@@ -63,7 +63,6 @@ while read a_file_name; do
   # 1. Replace last 3 chars, e.g., :17	With: nothing
   # 2. Replace ALL : 	With: -
   # 3. Replace ALL spaces  With: _
-  # | sed -e 's/.\{3\}$//' -e 's/:/-/g' -e 's/ /_/g')
   
   date_for_filename_change="${exif_date/${exif_date: -3}}"
   date_for_filename_change="${date_for_filename_change//:/-}"
