@@ -35,7 +35,7 @@ echo "Date changes and filename changes in progress..."
 echo "..."
 
 # Loop that processes entire given directory.
-find $directory_path -type f |
+find $directory_path -type f -name '*.jpg' |
 while read a_file_name; do
   exif_date=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
   
