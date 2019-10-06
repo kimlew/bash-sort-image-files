@@ -39,7 +39,7 @@ find $directory_path -type f -name '*.jpg' |
 while read a_file_name; do
   exif_date=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
   
-  if [ "$exif_date" == '' ] ; then # > /dev/null
+  if [ "$exif_date" == '' ] > /dev/null; then
     echo "Error: The file, $a_file_name"
     echo "- is missed the exif metadata, EXIF:DateTimeOriginal - so skipping this file"
     echo "Continuing with next file ..."
