@@ -50,20 +50,18 @@ while read a_file_name; do
   # Change filesystem date to EXIF photo-taken date, EXIF:DateTimeOriginal.
   # 1. Replace ALL occurrences of : 	With: nothing
   # 2. Replace 1st occurrence of space 	With: nothing
-  # 3. Replace last 2 char at end	  With: A literal . plus last 2 char at end.
+  # 3. Build string by deleting last 2 char at end. Then concat . & then concat 
+  # last 2 char, e.g., abc12 -> abc + . + 12 => abc.12
 
   date_for_date_change="${exif_date//:/}"
   date_for_date_change="${date_for_date_change/ /}"  
 
   # Use format: ${parameter%word} for the portion with the string to keep.
-  # Then concat . dot. Then concat the last 2 chars from given string.
-  # e.g., abc12 -> abc + . + 12 => abc.12
   # % - means to delete only the following stated chars & keep the rest, i.e., 
   # %${date_for_date_change: -2} - which is the 12 part of abc12 & keep abc
   date_for_date_change="${date_for_date_change%${date_for_date_change: -2}}.${date_for_date_change: -2}"
 
   touch -t $date_for_date_change $a_file_name
-  echo
 
   ### Filename Change that includes Date ###
   # Use EXIF photo-taken date, EXIF:DateTimeOriginal, change format & use in filename.
