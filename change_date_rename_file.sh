@@ -13,9 +13,13 @@
 #
 # Author: Kim Lew
 
-echo "Type the directory path for the files that need changed dates & filenames: "
-read directory_path
-echo "You typed: " $directory_path
+if [ -n "$1" ]; then
+  directory_path=$1
+else
+  echo "Type the directory path for the files that need changed dates & filenames: "
+  read directory_path
+  echo "You typed: " $directory_path
+fi
 
 if [ ! -d $directory_path ] 
 then
