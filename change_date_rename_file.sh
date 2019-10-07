@@ -20,7 +20,7 @@ echo "You typed: " $directory_path
 if [ ! -d $directory_path ] 
 then
     echo "This directory does NOT exist." 
-    exit 9999 # die with error code 9999
+    exit 1
 fi
 
 if ! which identify > /dev/null; then
@@ -28,7 +28,7 @@ if ! which identify > /dev/null; then
   echo "ImageMagick software suite. Install ImageMagick with your package manager."
   echo "Or see: https://imagemagick.org/index.php/"
   echo "Then re-run this script."
-  exit 9999 # die with error code 9999
+  exit 1
 fi
 
 echo "Date changes and filename changes in progress..."
@@ -41,7 +41,7 @@ while read a_file_name; do
   
   if [ "$exif_date" == '' ] > /dev/null; then
     echo "Error: The file, $a_file_name"
-    echo "- is missed the exif metadata, EXIF:DateTimeOriginal - so skipping this file"
+    echo "- is missing the exif metadata, EXIF:DateTimeOriginal - so skipping this file"
     echo "Continuing with next file ..."
     echo
     continue
