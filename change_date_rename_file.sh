@@ -35,7 +35,7 @@ echo "Date changes and filename changes in progress..."
 echo "..."
 
 # Loop that processes entire given directory.
-find $directory_path -type f -name '*.jpg' |
+find "$directory_path" -type f -name '*.jpg' |
 while read a_file_name; do
   exif_date=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
   
@@ -61,7 +61,7 @@ while read a_file_name; do
   # %${date_for_date_change: -2} - which is the 12 part of abc12 & keep abc
   date_for_date_change="${date_for_date_change%${date_for_date_change: -2}}.${date_for_date_change: -2}"
 
-  touch -t $date_for_date_change $a_file_name
+  touch -t $date_for_date_change "$a_file_name"
 
   ### Filename Change that includes Date ###
   # Use EXIF photo-taken date, EXIF:DateTimeOriginal, change format & use in filename.
@@ -76,7 +76,7 @@ while read a_file_name; do
   # Replace IMG in filename with value in $datestring_for_filename, which is
   # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
   new_file_name="${a_file_name/IMG/$date_for_filename_change}"
-  mv $a_file_name $new_file_name
+  mv "$a_file_name" "$new_file_name"
 done
 echo "Done."
 
