@@ -54,7 +54,7 @@ while read a_file_name; do
   # last 2 char, e.g., abc12 -> abc + . + 12 => abc.12
 
   date_for_date_change="${exif_date//:/}"
-  date_for_date_change="${date_for_date_change/ /}"  
+  date_for_date_change="${date_for_date_change// /}"  
 
   # Use format: ${parameter%word} for the portion with the string to keep.
   # % - means to delete only the following stated chars & keep the rest, i.e., 
@@ -71,7 +71,7 @@ while read a_file_name; do
   
   date_for_filename_change="${exif_date/${exif_date: -3}}"
   date_for_filename_change="${date_for_filename_change//:/-}"
-  date_for_filename_change="${date_for_filename_change/ /_}"
+  date_for_filename_change="${date_for_filename_change// /_}"
 
   # Replace IMG in filename with value in $datestring_for_filename, which is
   # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
