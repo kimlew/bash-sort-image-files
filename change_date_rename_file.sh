@@ -63,7 +63,7 @@ while read a_file_name; do
   # Use format: ${parameter%word} for the portion with the string to keep.
   # % - means to delete only the following stated chars & keep the rest, i.e., 
   # %${date_for_date_change: -2} - which is the 12 part of abc12 & keep abc
-  date_for_date_change="${date_for_date_change%${date_for_date_change: -2}}.${date_for_date_change: -2}"
+  date_for_date_change="${date_for_date_change%??}.${date_for_date_change: -2}"
 
   touch -t $date_for_date_change "$a_file_name"
 
