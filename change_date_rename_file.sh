@@ -18,10 +18,10 @@ if [ -n "$1" ]; then
 else
   echo "Type the directory path for the files that need changed dates & filenames: "
   read directory_path
-  echo "You typed: " $directory_path
+  echo "You typed: $directory_path"
 fi
 
-if [ ! -d $directory_path ] 
+if [ ! -d "$directory_path" ] 
 then
     echo "This directory does NOT exist." 
     exit 1
@@ -41,7 +41,7 @@ echo "..."
 # Loop that processes entire given directory.
 find "$directory_path" -type f -name '*.jpg' |
 while read a_file_name; do
-  exif_date=$(identify -format '%[EXIF:DateTimeOriginal]' $a_file_name)
+  exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name")"
   
   if [ "$exif_date" == '' ] > /dev/null; then
     echo "Error: The file, $a_file_name"
@@ -65,7 +65,7 @@ while read a_file_name; do
   # %${date_for_date_change: -2} - which is the 12 part of abc12 & keep abc
   date_for_date_change="${date_for_date_change%??}.${date_for_date_change: -2}"
 
-  touch -t $date_for_date_change "$a_file_name"
+  touch -t "$date_for_date_change" "$a_file_name"
 
   ### Filename Change that includes Date ###
   # Use EXIF photo-taken date, EXIF:DateTimeOriginal, change format & use in filename.
