@@ -80,7 +80,32 @@ while read a_file_name; do
   # Replace IMG in filename with value in $datestring_for_filename, which is
   # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
   new_file_name="${a_file_name/IMG/$date_for_filename_change}"
-  mv "$a_file_name" "$new_file_name"
+ 
+  # Build onto new_file_name. Concat to front - year & month.
+  # Test with: /Users/kimlew/Sites/bash_projects/test_mkdir-p
+  # Use: ${string:position:length}   On: 2015:09:02 07:09:03
+  year=${exif_date:0:4}
+  month=${exif_date:5:2}
+  echo $year
+  echo $month
+
+  just_path=$(dirname "${new_file_name}")
+  path_with_subdir_year_month="${just_path}/${year}/${month}"
+  echo "path_with_subdir_year_month:" "$path_with_subdir_year_month"
+
+  echo "a_file_name:" "$a_file_name"
+  echo "just_path:" "$just_path"
+
+  mkdir -p ${path_with_subdir_year_month}
+
+  just_filename=$(basename "${new_file_name}")
+  new_dir_and_filename=$just_path/$year/$month/$just_filename
+
+  echo
+  echo "just_filename:" "$just_filename"
+  echo "new_dir_and_filename:" "$new_dir_and_filename"
+
+  mv "$a_file_name" "$new_dir_and_filename"
 done
 echo "Done."
 
