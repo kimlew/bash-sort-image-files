@@ -93,7 +93,7 @@ while read a_file_name; do
   mkdir -p ${path_with_subdir_year_month}
 
   just_filename=$(basename "${new_file_name}")
-  new_dir_and_filename=$just_path/$year/$month/$just_filename
+  new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
 
   mv "$a_file_name" "$new_dir_and_filename"
 done
