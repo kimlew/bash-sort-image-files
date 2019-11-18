@@ -2,11 +2,15 @@
 #
 # Name: change_dates_rename_files.sh
 #
-# Brief: Command-line Bash script to change Creation Date & Modified Date that  
-# are currently download date to photo-taken date. The script also adds
-# photo-taken date to the filename, e.g., 2015-09-02_07-09_0059.jpg.
-# These changes will make file sorting easier. Takes in 1 command-line 
-# parameter, directory_path, the location of the files.
+# Brief: Command-line Bash script to change Creation Date & Modified Date, that  
+# are currently download date, to photo-taken date. The script also:
+# - adds the photo-taken date to the filename, e.g., 2015-09-02_07-09_0059.jpg 
+# - creates directories and subdirectories based on the year and month
+# - places files in associated subdirectories.
+#
+# These changes make file sorting easier. 
+# The script takes in 1 command-line parameter, directory_path, the location of 
+# the files.
 #
 # Note: Photo-taken date is exif:DateTimeOriginal.
 # Note: Script processes only a single directory. 
