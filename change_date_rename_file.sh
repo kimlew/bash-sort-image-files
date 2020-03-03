@@ -48,7 +48,7 @@ echo "..."
 
 # Loop that processes entire given directory.
 find "$directory_path" -maxdepth 1 -type f -name '*.jpg' |
-while read a_file_name; do
+while read -r a_file_name; do
   exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name")"
   
   if [ "$exif_date" == '' ] > /dev/null; then
