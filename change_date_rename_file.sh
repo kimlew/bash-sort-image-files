@@ -17,12 +17,15 @@
 #
 # Author: Kim Lew
 
-if [ -n "$1" ]; then
-  directory_path=$1
-else
+if [ $# -eq 0 ]; then
   echo "Type the directory path for the files that need changed dates & filenames: "
-  read directory_path
-  echo "You typed: $directory_path"
+  read -r directory_path
+elif [ $# -eq 1 ]; then
+  directory_path="$1"
+elif [ $# -gt 1 ]; then 
+  # Case of > 1 parameter given.
+  echo "Enter the directory path as the 1st command-line argument. Or give 0 arguments & get prompt."
+  exit 1
 fi
 
 if [ ! -d "$directory_path" ] 
@@ -30,6 +33,7 @@ then
     echo "This directory does NOT exist." 
     exit 1
 fi
+echo "Path you gave: $directory_path"
 
 if ! which identify > /dev/null; then
   echo "Error: You are missing the identify program that is part of the"
