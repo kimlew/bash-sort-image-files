@@ -35,7 +35,7 @@ then
 fi
 echo "Path you gave: $directory_path"
 
-if ! which identify > /dev/null; then
+if ! magick identify --version > /dev/null; then
   echo "Error: You are missing the identify program that is part of the"
   echo "ImageMagick software suite. Install ImageMagick with your package manager."
   echo "Or see: https://imagemagick.org/index.php/"
