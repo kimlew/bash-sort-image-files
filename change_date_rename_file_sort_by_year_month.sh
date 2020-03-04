@@ -92,13 +92,13 @@ while read -r a_file_name; do
   # Build onto new_file_name. Concat to front - year & month.
   # Test with: /Users/kimlew/Sites/bash_projects/test_mkdir-p
   # Use: ${string:position:length}   On: 2015:09:02 07:09:03
-  year=${exif_date:0:4}
-  month=${exif_date:5:2}
+  year="${exif_date:0:4}"
+  month="${exif_date:5:2}"
 
   just_path=$(dirname "${new_file_name}")
   path_with_subdir_year_month="${just_path}/${year}/${month}"
 
-  mkdir -p ${path_with_subdir_year_month}
+  mkdir -p "${path_with_subdir_year_month}"
 
   just_filename=$(basename "${new_file_name}")
   new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
