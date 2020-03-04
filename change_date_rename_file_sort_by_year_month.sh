@@ -45,8 +45,9 @@ fi
 
 echo "Date changes, filename changes & sorting in progress..."
 
+file_sort_counter=0
+
 # Loop that processes entire given directory.
-find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg' |
 while read -r a_file_name; do
   exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name")"
   
@@ -103,7 +104,15 @@ while read -r a_file_name; do
   new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
 
   mv "$a_file_name" "$new_dir_and_filename"
-done
-echo "Done."
+  file_sort_counter="$((file_sort_counter+1))"
+done < <(find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg')
+   # Note: Redirects find back into while loop with process substitution so
+   # ${file_sort_counter} is accessible vs. in a | subshell process.
+
+echo "Done. Number of files sorted is: " "${file_sort_counter}"
+
+if [ "${file_sort_counter}" -eq 0 ]; then
+  echo "There are no image files at the top-level of the path you typed."
+fi
 
 exit 0
