@@ -43,12 +43,13 @@ if ! magick identify --version > /dev/null; then
   exit 1
 fi
 
-echo "Date changes, filename changes & sorting in progress..."
+echo "Sorting files..."
 
 file_sort_counter=0
 
 # Loop that processes entire given directory.
 while read -r a_file_name; do
+  echo "Looking at file:" "${a_file_name}"
   exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name")"
   
   if [ "$exif_date" == '' ] > /dev/null; then
