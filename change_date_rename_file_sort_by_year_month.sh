@@ -52,8 +52,8 @@ while read -r a_file_name; do
   echo "Looking at file:" "${a_file_name}"
   exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name" 2> /dev/null)" 
   modify_date="$(identify -format '%[DATE:modify]' "$a_file_name" 2> /dev/null)"
-  echo "EXIF date is: " "${exif_date}"
-  echo "MODIFY date is: " "{$modify_date}"
+  echo " EXIF date is: " "${exif_date}"
+  echo " MODIFY date is: " "${modify_date}"
   
   if [[ "$exif_date" == '' ]] && [[ -z "${modify_date}" ]]; then
     # Give error if NO [EXIF:DateTimeOriginal] or [DATE:Modify].
@@ -62,7 +62,6 @@ while read -r a_file_name; do
     echo "Continuing with next file ..."
     continue
   elif [ "${exif_date}" ]; then
-    ### Filesystem/OS Date Change ###
     # Change filesystem date to EXIF photo-taken date, EXIF:DateTimeOriginal.
     # Given Format:  2018:04:03 21:31:41
     # Wanted Syntax: [[CC]YY]MMDDhhmm[.SS] Wanted Format: 2015-09-02_07-09_0060.jpg
@@ -76,7 +75,7 @@ while read -r a_file_name; do
     # Trim last 2 chars to remove SS so in format: [[CC]YY]MMDDhhmm[.SS]
     date_for_date_change="${date_for_date_change%??}.${date_for_date_change: -2}"
 
-    ### Filename Change that includes Date ###
+    # Prepare Filename Change that includes Date
     # Use EXIF photo-taken date, EXIF:DateTimeOriginal, change format & use in filename.
     # 1. Replace last 3 chars, e.g., :17	With: nothing
     # 2. Replace ALL : 	With: -
@@ -85,31 +84,56 @@ while read -r a_file_name; do
     date_for_filename_change="${exif_date/${exif_date: -3}}"
     date_for_filename_change="${date_for_filename_change//:/-}"
     date_for_filename_change="${date_for_filename_change// /_}"
-
-    # Replace IMG in filename with value in $datestring_for_filename, which is
-    # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
-    new_file_name="${a_file_name/IMG/$date_for_filename_change}"
   
     # Build onto new_file_name. Concat to front - year & month.
     # Use: ${string:position:length}   On: 2015:09:02 07:09:03
     year="${exif_date:0:4}"
     month="${exif_date:5:2}"
-
-    just_path=$(dirname "${new_file_name}")
-    path_with_subdir_year_month="${just_path}/${year}/${month}"
-
-    mkdir -p "${path_with_subdir_year_month}"
-
-    just_filename=$(basename "${new_file_name}")
-    new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
-  else # if [ "${modify_date}" ]; then
-    # Add modify date part.
-    echo 'In modify date part'
+  else # Use modify date when no exif date.
+    # Change filesystem date to modify_date, date:modify for date change.
+    # Given Format:  2018-10-09T18:42:41+00:00
+    # Wanted Syntax: [[CC]YY]MMDDhhmm[.SS] Wanted Format: 202002031806
+    # 1. Trim last 9 chars.
+    # 2. Remove all -.
+    # 3. Remove all T.
+    # 4. Remove all :.
+    date_for_date_change="${modify_date::-9}"
+    date_for_date_change="${date_for_date_change//-/}"
+    date_for_date_change="${date_for_date_change//T/}"
+    date_for_date_change="${date_for_date_change//:/}"
+    
+    # Prepare Filename Change that includes Date. Use modify_date, change format
+    # & use in filename.
+    # Given Format:  2018-10-09T18:42:41+00:00
+    # Wanted Format: 2015-09-02_07-09_0060.jpg
+    # 1. Replace last 3 chars, e.g., :17	With: nothing
+    # 2. Replace ALL : 	With: -
+    # 3. Replace ALL spaces  With: _
+    date_for_filename_change="${modify_date::-9}" # Result: 2018-10-09T18:42
+    date_for_filename_change="${date_for_filename_change//T/-}" # Result: 2018-10-09_18:42
+    date_for_filename_change="${date_for_filename_change//:/_}" # Result: 2018-10-09_18_42
+  
+    # Build onto new_file_name. Concat to front - year & month.
+    # Use: ${string:position:length}   On: 2018-10-09T18:42:41+00:00
+    year="${modify_date:0:4}"
+    month="${modify_date:5:2}"
   fi
+
+  # Replace IMG in filename with value in $datestring_for_filename, which is
+  # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
+  new_file_name="${a_file_name/IMG/$date_for_filename_change}"
+  just_path=$(dirname "${new_file_name}")
+  path_with_subdir_year_month="${just_path}/${year}/${month}"
+
+  mkdir -p "${path_with_subdir_year_month}"
+
+  just_filename=$(basename "${new_file_name}")
+  new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
 
   touch -t "$date_for_date_change" "$a_file_name"
   mv "$a_file_name" "$new_dir_and_filename"
   file_sort_counter="$((file_sort_counter+1))"
+
 done < <(find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg' -o -name '*.JPG' \
     -o -name '*.gif' -o -name '*.GIF' -o -name '*.tif' -o -name '*.TIF' \
     -o -name '*.png' -o -name '*.PNG')
