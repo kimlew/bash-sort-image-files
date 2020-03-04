@@ -43,8 +43,7 @@ if ! magick identify --version > /dev/null; then
   exit 1
 fi
 
-echo "Date changes and filename changes in progress..."
-echo "..."
+echo "Date changes, filename changes & sorting in progress..."
 
 # Loop that processes entire given directory.
 find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg' |
