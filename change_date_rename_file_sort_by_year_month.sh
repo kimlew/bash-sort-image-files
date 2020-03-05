@@ -45,14 +45,10 @@ elif [[ $# -eq 1 || $# -eq 2 || $# -eq 3 ]]; then
   fi
 fi
 
-if [ ! -d "$directory_path" ] 
-then
+if [ ! -d "$directory_path" ]; then
     echo "This directory does NOT exist." 
     exit 1
 fi
-echo "Path you gave:" "${directory_path}"
-echo "Day subdirectories wanted?: " "${day_subdir_also}"
-echo "Rename files?: " "${rename_files_also}"
 
 if ! magick identify --version > /dev/null; then
   echo "Error: You are missing the identify program that is part of the"
@@ -62,6 +58,37 @@ if ! magick identify --version > /dev/null; then
   exit 1
 fi
 
+echo "Path you gave:" "${directory_path}"
+echo "Day subdirectories wanted?: " "${day_subdir_also}"
+echo "Rename files?: " "${rename_files_also}"
+
+case "${day_subdir_also}" in
+  [yY] | [yY][eE][sS]) # To create year-month-day subdirectories.
+    clean_day_subdir_also='y'
+;;
+  [nN] | [nN][oO] | '') # To create ONLY year-month subdirectories.
+    clean_day_subdir_also='n'
+;;
+    *)
+echo "Invalid input for 2nd parameter given or answer to 2nd prompt. Type y or n."
+exit 1
+;;
+esac
+case "${rename_files_also}" in
+  [yY] | [yY][eE][sS]) # To create year-month-day subdirectories.
+    clean_rename_files_also='y'
+;;
+  [nN] | [nN][oO] | '') # To create ONLY year-month subdirectories.
+    clean_rename_files_also='n'
+;;
+    *)
+echo "Invalid input for 3rd parameter given or answer to 3rd prompt. Type y or n."
+exit 1
+;;
+esac
+
+echo "clean_day_subdir_also is $clean_day_subdir_also" 
+echo "clean_rename_files_also is $clean_rename_files_also" 
 echo "Sorting files..."
 
 file_sort_counter=0
