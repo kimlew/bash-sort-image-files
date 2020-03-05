@@ -17,15 +17,32 @@
 #
 # Author: Kim Lew
 
-if [ $# -eq 0 ]; then
-  echo "Type the directory path for the files that need changed dates & filenames: "
-  read -r directory_path
-elif [ $# -eq 1 ]; then
-  directory_path="$1"
-elif [ $# -gt 1 ]; then 
-  # Case of > 1 parameter given.
-  echo "Enter the directory path as the 1st command-line argument. Or give 0 arguments & get prompt."
+if [ $# -gt 3 ]; then 
+  # Case of 4 or more parameters given.
+  echo "Give 3 command-line arguments. Or give 0 arguments & get prompts."
   exit 1
+fi
+
+if [ $# -eq 0 ]; then
+  echo "Type the directory path for the files you want to sort: "
+  read -r directory_path
+  echo "Do you want Day sub-directories, along with the Year & Month ones? [y/n] "
+  read -r day_subdir_also
+  echo "Do you want to re-name the filenames to use the date? [y/n] "
+  read -r rename_files_also
+elif [[ $# -eq 1 || $# -eq 2 || $# -eq 3 ]]; then
+  if [ $# -eq 1 ]; then
+    echo "For parameter 2: Type y if you also want Day subdirectories."
+    echo "For parameter 3: Type y if you also want to re-name the filenames based on the date."
+    exit 1
+  elif [ $# -eq 2 ]; then
+    echo "For parameter 3: Type y if you also want to re-name the filenames based on the date."
+    exit 1
+  elif [ $# -eq 3 ]; then
+    directory_path="$1"
+    day_subdir_also="$2"
+    rename_files_also="$3"
+  fi
 fi
 
 if [ ! -d "$directory_path" ] 
@@ -33,7 +50,9 @@ then
     echo "This directory does NOT exist." 
     exit 1
 fi
-echo "Path you gave: $directory_path"
+echo "Path you gave:" "${directory_path}"
+echo "Day subdirectories wanted?: " "${day_subdir_also}"
+echo "Rename files?: " "${rename_files_also}"
 
 if ! magick identify --version > /dev/null; then
   echo "Error: You are missing the identify program that is part of the"
