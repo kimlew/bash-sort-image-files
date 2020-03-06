@@ -143,10 +143,10 @@ while read -r a_file_name; do
     # 2. Remove all -.
     # 3. Remove all T.
     # 4. Remove all :.
-    date_for_date_change="${modify_date::-9}"
-    date_for_date_change="${date_for_date_change//-/}"
-    date_for_date_change="${date_for_date_change//T/}"
-    date_for_date_change="${date_for_date_change//:/}"
+    date_for_date_change="${modify_date::-9}" # Result: 2020-02-08T16:02
+    date_for_date_change="${date_for_date_change//-/}" # Result: 20200208T16:02
+    date_for_date_change="${date_for_date_change//T/}" # Result: 2020020816:02
+    date_for_date_change="${date_for_date_change//:/}" # Result: 202002081602
     
     # Prepare Filename Change that includes Date. Use modify_date, change format
     # & use in filename.
@@ -165,26 +165,33 @@ while read -r a_file_name; do
     month="${modify_date:5:2}"
   fi
 
-  # Replace IMG in filename with value in $datestring_for_filename, which is
-  # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
-  new_file_name="${a_file_name/IMG/$date_for_filename_change}"
-  just_path=$(dirname "${new_file_name}")
-  path_with_subdir_year_month="${just_path}/${year}/${month}"
+  just_path=$(dirname "${a_file_name}")
+  just_filename=$(basename "${a_file_name}") # For path to move files into subdirectories
 
-  mkdir -p "${path_with_subdir_year_month}"
+  if [ "${clean_day_subdir_also}" == 'y' ]; then # Make Year-Month-Day subdirectories.
+    day="${date_for_date_change:6:2}"
+    path_with_subdir_year_month_day="${just_path}/${year}/${month}/${day}"
+    mkdir -p "${path_with_subdir_year_month_day}"
+    new_dir_and_filename="${just_path}/${year}/${month}/${day}/${just_filename}"
+  else # [ "${clean_day_subdir_also}" == 'n' ]; then # Make year-month subdirectories.
+    path_with_subdir_year_month="${just_path}/${year}/${month}"
+    mkdir -p "${path_with_subdir_year_month}"
+    new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
+  fi
 
-  just_filename=$(basename "${new_file_name}")
-  new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
+  if [ "${clean_rename_files_also}" == 'y' ]; then # Renames files.
+    # TODO: Add rename file part.
+  fi
 
   touch -t "$date_for_date_change" "$a_file_name"
   mv "$a_file_name" "$new_dir_and_filename"
   file_sort_counter="$((file_sort_counter+1))"
 
 done < <(find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg' -o -name '*.JPG' \
-    -o -name '*.gif' -o -name '*.GIF' -o -name '*.tif' -o -name '*.TIF' \
-    -o -name '*.png' -o -name '*.PNG')
-   # Note: Redirects find back into while loop with process substitution so
-   # ${file_sort_counter} is accessible vs. in a | subshell process.
+  -o -name '*.gif' -o -name '*.GIF' -o -name '*.tif' -o -name '*.TIF' \
+  -o -name '*.png' -o -name '*.PNG')
+  # Note: Redirects find back into while loop with process substitution so
+  # ${file_sort_counter} is accessible vs. in a | subshell process.
 
 echo "Done. Number of files sorted is: " "${file_sort_counter}"
 
