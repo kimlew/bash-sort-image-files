@@ -168,23 +168,44 @@ while read -r a_file_name; do
   just_path=$(dirname "${a_file_name}")
   just_filename=$(basename "${a_file_name}") # For path to move files into subdirectories
 
-  if [ "${clean_day_subdir_also}" == 'y' ]; then # Make Year-Month-Day subdirectories.
-    day="${date_for_date_change:6:2}"
-    path_with_subdir_year_month_day="${just_path}/${year}/${month}/${day}"
+  # 4 Cases for Options to Add Day & Rename Files:
+  # Case 1: Add Day AND Rename files.
+  # Case 2: Add Day. No Rename files.
+  # Case 3: No add Day. Rename files.
+  # Case 4: No add Day. No Rename files.
+
+  day="${date_for_date_change:6:2}"
+  path_with_subdir_year_month_day="${just_path}/${year}/${month}/${day}"
+  path_with_subdir_year_month="${just_path}/${year}/${month}"
+
+  if [[ "${clean_day_subdir_also}" == 'y' ]] && [[ "${clean_rename_files_also}" == 'y' ]]; then
+    # Add Day subsubdirectories so Year-Month-Day AND Rename Files with IMG in them.
+    mkdir -p "${path_with_subdir_year_month_day}"
+    renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
+    just_filename=$(basename "${renamed_file_and_path}") # For path to move files into subdirectories
+    new_dir_and_filename="${just_path}/${year}/${month}/${day}/${just_filename}"
+  elif [ "${clean_day_subdir_also}" == 'y' ]; then # ONLY add Day subdirectories.
     mkdir -p "${path_with_subdir_year_month_day}"
     new_dir_and_filename="${just_path}/${year}/${month}/${day}/${just_filename}"
-  else # [ "${clean_day_subdir_also}" == 'n' ]; then # Make year-month subdirectories.
-    path_with_subdir_year_month="${just_path}/${year}/${month}"
+  elif [ "${clean_rename_files_also}" == 'y' ]; then # ONLY rename files.
+    # Replace IMG in filename with value in $datestring_for_filename, which is
+    # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
+    new_dir_and_filename="${a_file_name/IMG/$date_for_filename_change}"
+    renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
+    echo "renamed_file_and_path: " "${renamed_file_and_path}"
+    mkdir -p "${path_with_subdir_year_month}"
+    # Get just filename from renamed_file_and_path.
+    just_filename=$(basename "${renamed_file_and_path}") # For path to move files into subdirectories
+    new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
+  else # ONLY make year-month subdirectories.
     mkdir -p "${path_with_subdir_year_month}"
     new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
   fi
-
-  if [ "${clean_rename_files_also}" == 'y' ]; then # Renames files.
-    # TODO: Add rename file part.
-  fi
+  echo 
+  echo "new_dir_and_NEW_filename is: " "${new_dir_and_filename}"
 
   touch -t "$date_for_date_change" "$a_file_name"
-  mv "$a_file_name" "$new_dir_and_filename"
+  mv "${a_file_name}" "${new_dir_and_filename}"
   file_sort_counter="$((file_sort_counter+1))"
 
 done < <(find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg' -o -name '*.JPG' \
