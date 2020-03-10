@@ -2,18 +2,17 @@
 #
 # NAME: change_dates_rename_files.sh
 #
-# BRIEF: Command-line Bash script with prompts to help sort photo files.
-# Changes files with incorrect Creation Date & Modified Date, which has  
-# download date, to photo-taken date. The script also:
-# - adds the photo-taken date to the filename, e.g., 2015-09-02_07-09_0059.jpg 
-# - creates directories and subdirectories based on the year and month
-# - places files in associated subdirectories.
+# BRIEF: Command-line Bash script that takes 3 command-line arguments or gives
+# 3 prompts to help sort photo files.
+# Changes files that use download date as Creation Date, which is incorrect, to
+# photo-taken date. The script also:
+# - adds the photo-taken date, to the filename, e.g., 2015-09-02_07-09_0059.jpg 
+# - creates subdirectories based on the Year & Month
+# - places files in subdirectories
+# - Also, gives options to create Day subdirectories or rename files with IMG in filename
 #
-# The script takes in 1 command-line parameter, directory_path, the location of 
-# the files.
-#
-# Note: Photo-taken date is exif:DateTimeOriginal.
-# Note: Script processes only a single directory. 
+# Note: Photo-taken date is exif:DateTimeOriginal. If no exif:DateTimeOriginal, 
+# script uses date:modify.
 #
 # Author: Kim Lew
 
@@ -28,15 +27,15 @@ if [ $# -eq 0 ]; then
   read -r directory_path
   echo "Do you want Day sub-directories, along with the Year & Month ones? [y/n] "
   read -r day_subdir_also
-  echo "Do you want to re-name the filenames to use the date? [y/n] "
+  echo "Do you want to re-name the files with IMG, replacing IMG with the date? [y/n] "
   read -r rename_files_also
 elif [[ $# -eq 1 || $# -eq 2 || $# -eq 3 ]]; then
   if [ $# -eq 1 ]; then
     echo "For parameter 2: Type y if you also want Day subdirectories."
-    echo "For parameter 3: Type y if you also want to re-name the filenames based on the date."
+    echo "For parameter 3: Type y if you also want to re-name the files based on the date."
     exit 1
   elif [ $# -eq 2 ]; then
-    echo "For parameter 3: Type y if you also want to re-name the filenames based on the date."
+    echo "For parameter 3: Type y if you also want to re-name the files based on the date."
     exit 1
   elif [ $# -eq 3 ]; then
     directory_path="$1"
