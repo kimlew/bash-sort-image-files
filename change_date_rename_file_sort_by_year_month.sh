@@ -2,14 +2,14 @@
 #
 # NAME: change_dates_rename_files.sh
 #
-# BRIEF: Command-line Bash script that takes 3 command-line arguments or gives
-# 3 prompts to help sort photo files.
+# BRIEF: Bash script that takes 3 command-line arguments or gives 3 prompts
+# to help sort photo files.
 # Changes files that use download date as Creation Date, which is incorrect, to
 # photo-taken date. The script also:
 # - adds the photo-taken date, to the filename, e.g., 2015-09-02_07-09_0059.jpg 
 # - creates subdirectories based on the Year & Month
 # - places files in subdirectories
-# - Also, gives options to create Day subdirectories or rename files with IMG in filename
+# - gives options to create Day subdirectories or rename files with IMG in filename
 #
 # Note: Photo-taken date is exif:DateTimeOriginal. If no exif:DateTimeOriginal, 
 # script uses date:modify.
@@ -32,10 +32,10 @@ if [ $# -eq 0 ]; then
 elif [[ $# -eq 1 || $# -eq 2 || $# -eq 3 ]]; then
   if [ $# -eq 1 ]; then
     echo "For parameter 2: Type y if you also want Day subdirectories."
-    echo "For parameter 3: Type y if you also want to re-name the files based on the date."
+    echo "For parameter 3: Type y if you also want to re-name the files with IMG using the date."
     exit 1
   elif [ $# -eq 2 ]; then
-    echo "For parameter 3: Type y if you also want to re-name the files based on the date."
+    echo "For parameter 3: Type y if you also want to re-name the files with IMG using the date."
     exit 1
   elif [ $# -eq 3 ]; then
     directory_path="$1"
@@ -85,10 +85,9 @@ echo "Invalid input for 3rd parameter given or answer to 3rd prompt. Type y or n
 exit 1
 ;;
 esac
-
-echo "clean_day_subdir_also is $clean_day_subdir_also" 
-echo "clean_rename_files_also is $clean_rename_files_also" 
-echo "Sorting files..."
+ 
+echo
+echo "SORTING files..."
 
 file_sort_counter=0
 
@@ -97,8 +96,8 @@ while read -r a_file_name; do
   echo "Looking at file:" "${a_file_name}"
   exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name" 2> /dev/null)" 
   modify_date="$(identify -format '%[DATE:modify]' "$a_file_name" 2> /dev/null)"
-  echo " EXIF date is: " "${exif_date}"
-  echo " MODIFY date is: " "${modify_date}"
+  echo -e " Exif Date is: \t\t" "${exif_date}"
+  echo -e " Modify Date is: \t" "${modify_date}"
   
   if [[ "$exif_date" == '' ]] && [[ -z "${modify_date}" ]]; then
     # Give error if NO [EXIF:DateTimeOriginal] or [DATE:Modify].
@@ -202,8 +201,7 @@ while read -r a_file_name; do
     new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
   fi
   
-  echo 
-  echo "new_dir_and_NEW_filename is: " "${new_dir_and_filename}"
+  echo "Changing to: " "${new_dir_and_filename}"
 
   mkdir -p "${path_for_subdirs_creation}"
   touch -t "$date_for_date_change" "$a_file_name"
@@ -216,10 +214,10 @@ done < <(find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg' -o -name '
   # Note: Redirects find back into while loop with process substitution so
   # ${file_sort_counter} is accessible vs. in a | subshell process.
 
-echo "Done. Number of files sorted is: " "${file_sort_counter}"
+echo "DONE. Number of files sorted is: " "${file_sort_counter}"
 
 if [ "${file_sort_counter}" -eq 0 ]; then
   echo "There are no image files at the top-level of the path you typed."
 fi
-
+echo
 exit 0
