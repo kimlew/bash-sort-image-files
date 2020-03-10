@@ -1,15 +1,15 @@
 #! /usr/bin/env bash
 #
-# NAME: change_dates_rename_files.sh
+# NAME: sort_image_files.sh
 #
 # BRIEF: Bash script that takes 3 command-line arguments or gives 3 prompts
-# to help sort photo files.
+# to sort photo files.
 # Changes files that use download date as Creation Date, which is incorrect, to
-# photo-taken date. The script also:
-# - adds the photo-taken date, to the filename, e.g., 2015-09-02_07-09_0059.jpg 
+# photo-taken date. The script also: 
 # - creates subdirectories based on the Year & Month
 # - places files in subdirectories
-# - gives options to create Day subdirectories or rename files with IMG in filename
+# - gives options to also create Day subdirectories or rename files with IMG in filename,
+# i.e., adds the photo-taken date, to the filename, e.g., 2015-09-02_07-09_0059.jpg
 #
 # Note: Photo-taken date is exif:DateTimeOriginal. If no exif:DateTimeOriginal, 
 # script uses date:modify.

@@ -1,11 +1,15 @@
-### Bash script to change dates, rename files & place files in created subdirectories
+### Bash script that sorts image files into Year/Month subdirectories
 
-This Bash script, which makes file sorting easier:
-- changes download date to photo-taken date (using file metadata's `exif:DateTimeOriginal`)
-- adds photo-taken date to filename
-- creates directories and subdirectories based on the year and month 
-- places files in associated subdirectories
+Filename: `sort_image_files.sh`
 
-The script takes in 1 command-line parameter, `directory_path`, or prompts the user for one, which is the location of the files that need Creation Date change to the photo-taken date.
+This script:
+- takes 3 command-line arguments or gives 3 prompts to sort photo files
+- changes files that use download date as Creation Date, which is incorrect, to photo-taken date
 
-**Note**: Script processes only a single directory.
+The script also:
+- creates subdirectories based on the Year & Month
+- places files in subdirectories
+- gives options to also create Day subdirectories or rename files with IMG in filename,
+i.e., adds the photo-taken date, to the filename, e.g., 2015-09-02_07-09_0059.jpg 
+
+**Note**: Photo-taken date is exif:DateTimeOriginal. If no exif:DateTimeOriginal, script uses date:modify.
