@@ -22,26 +22,24 @@ if [ $# -gt 3 ]; then
   exit 1
 fi
 
-if [ $# -eq 0 ]; then
+if [ $# -eq 0 ]; then # Show prompts.
   echo "Type the directory path for the files you want to sort: "
   read -r directory_path
   echo "Do you want Day sub-directories, along with the Year & Month ones? [y/n] "
   read -r day_subdir_also
   echo "Do you want to re-name the files with IMG, replacing IMG with the date? [y/n] "
   read -r rename_files_also
-elif [[ $# -eq 1 || $# -eq 2 || $# -eq 3 ]]; then
-  if [ $# -eq 1 ]; then
+elif [ $# -lt 3 ]; then # Not enough command-line arguments given. Need 2 or 3.
+  if [ $# -lt 2 ]; then # If given 1 command-line argument.
     echo "For parameter 2: Type y if you also want Day subdirectories."
-    echo "For parameter 3: Type y if you also want to re-name the files with IMG using the date."
-    exit 1
-  elif [ $# -eq 2 ]; then
-    echo "For parameter 3: Type y if you also want to re-name the files with IMG using the date."
-    exit 1
-  elif [ $# -eq 3 ]; then
-    directory_path="$1"
-    day_subdir_also="$2"
-    rename_files_also="$3"
   fi
+  # If given 2 command-line arguments.
+  echo "For parameter 3: Type y if you also want to re-name the files with IMG using the date."
+  exit 1
+else # Gave required 3 command-line arguments.
+  directory_path="$1"
+  day_subdir_also="$2"
+  rename_files_also="$3"
 fi
 
 if [ ! -d "$directory_path" ]; then
