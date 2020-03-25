@@ -59,30 +59,26 @@ echo "Path you gave:" "${directory_path}"
 echo "Day subdirectories wanted?: " "${day_subdir_also}"
 echo "Rename files?: " "${rename_files_also}"
 
-case "${day_subdir_also}" in
-  [yY] | [yY][eE][sS]) # To create year-month-day subdirectories.
-    clean_day_subdir_also='y'
-;;
-  [nN] | [nN][oO] | '') # To create ONLY year-month subdirectories.
-    clean_day_subdir_also='n'
-;;
+function convert_yn() {
+  local val=$1
+  local desc=$2
+
+  case "${val}" in
+    [yY] | [yY][eE][sS]) # To create year-month-day subdirs or rename files.
+      echo 'y'
+      ;;
+    [nN] | [nN][oO] | '') # To create ONLY year-month subdirs or NOT rename files.
+      echo 'n'
+      ;;
     *)
-echo "Invalid input for 2nd parameter given or answer to 2nd prompt. Type y or n."
-exit 1
-;;
-esac
-case "${rename_files_also}" in
-  [yY] | [yY][eE][sS]) # To create year-month-day subdirectories.
-    clean_rename_files_also='y'
-;;
-  [nN] | [nN][oO] | '') # To create ONLY year-month subdirectories.
-    clean_rename_files_also='n'
-;;
-    *)
-echo "Invalid input for 3rd parameter given or answer to 3rd prompt. Type y or n."
-exit 1
-;;
-esac
+      echo "Invalid input for ${desc}. Type y or n."
+      exit 1
+      ;;
+  esac
+}
+
+clean_day_subdir_also=$(convert_yn "$day_subdir_also" '2nd parameter or answer to 2nd prompt')
+clean_rename_files_also=$(convert_yn "$rename_files_also" '3rd parameter or answer to 3rd prompt')
  
 echo
 echo "SORTING files..."
