@@ -93,7 +93,7 @@ while read -r a_file_name; do
   echo -e " Exif Date is: \t\t" "${exif_date}"
   echo -e " Modify Date is: \t" "${modify_date}"
   
-  if [[ "$exif_date" == '' ]] && [[ -z "${modify_date}" ]]; then
+  if [[ "${exif_date}" == '' && "${modify_date}" == '' ]]; then
     # Give error if NO [EXIF:DateTimeOriginal] or [DATE:Modify].
     echo "Error: The file, $a_file_name"
     echo "- is missing the exif metadata, EXIF:DateTimeOriginal - so skipping this file"
@@ -170,7 +170,7 @@ while read -r a_file_name; do
   path_with_year_month_day="${just_path}/${year}/${month}/${day}"
   path_with_year_month="${just_path}/${year}/${month}"
 
-  if [[ "${clean_day_subdir_also}" == 'y' ]] && [[ "${clean_rename_files_also}" == 'y' ]]; then
+  if [[ "${clean_day_subdir_also}" == 'y' && "${clean_rename_files_also}" == 'y' ]]; then
     # Add Day subsubdirectories so Year-Month-Day AND Rename Files with IMG in them.
     path_for_subdirs_creation="${path_with_year_month_day}"
     renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
