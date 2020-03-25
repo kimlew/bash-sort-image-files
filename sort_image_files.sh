@@ -169,32 +169,24 @@ while read -r a_file_name; do
   day="${date_for_date_change:6:2}"
   path_with_year_month_day="${just_path}/${year}/${month}/${day}"
   path_with_year_month="${just_path}/${year}/${month}"
+  renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
 
   if [[ "${clean_day_subdir_also}" == 'y' && "${clean_rename_files_also}" == 'y' ]]; then
     # Add Day subsubdirectories so Year-Month-Day AND Rename Files with IMG in them.
     path_for_subdirs_creation="${path_with_year_month_day}"
-    renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
-    just_filename=$(basename "${renamed_file_and_path}") # For path to move files into subdirectories
-    new_dir_and_filename="${just_path}/${year}/${month}/${day}/${just_filename}"
+    just_filename=$(basename "${renamed_file_and_path}")
   elif [ "${clean_day_subdir_also}" == 'y' ]; then # ONLY add Day subdirectories.
     path_for_subdirs_creation="${path_with_year_month_day}"
-    new_dir_and_filename="${just_path}/${year}/${month}/${day}/${just_filename}"
   elif [ "${clean_rename_files_also}" == 'y' ]; then # ONLY rename files.
     # Replace IMG in filename with value in $datestring_for_filename, which is
     # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
-    new_dir_and_filename="${a_file_name/IMG/$date_for_filename_change}"
-    renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
-    echo "renamed_file_and_path: " "${renamed_file_and_path}"
     path_for_subdirs_creation="${path_with_year_month}"
-    
-    # Get just filename from renamed_file_and_path.
-    just_filename=$(basename "${renamed_file_and_path}") # For path to move files into subdirectories
-    new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
-  else # ONLY make year-month subdirectories.
+    just_filename=$(basename "${renamed_file_and_path}")
+  else # ONLY make Year-Month subdirectories.
     path_for_subdirs_creation="${path_with_year_month}"
-    new_dir_and_filename="${just_path}/${year}/${month}/${just_filename}"
   fi
-  
+
+  new_dir_and_filename="${path_for_subdirs_creation}/${just_filename}"
   echo "Changing to: " "${new_dir_and_filename}"
 
   mkdir -p "${path_for_subdirs_creation}"
