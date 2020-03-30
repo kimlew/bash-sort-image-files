@@ -159,17 +159,20 @@ while read -r a_file_name; do
 
   just_path=$(dirname "${a_file_name}")
   just_filename=$(basename "${a_file_name}") # For path to move files into subdirectories
+  day="${date_for_date_change:6:2}"
+  
+  path_with_year_month_day="${just_path}/${year}/${month}/${day}"
+  path_with_year_month="${just_path}/${year}/${month}"
+  
+  path_for_subdirs_creation="${path_with_year_month}"
+  renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
 
-  # 4 Cases for Options to Add Day & Rename Files:
+  # 1 default case + 3 Option Cases to Add Day & Rename Files.
+  # Default Case: No add Day. No Rename files. ONLY make Year-Month 
+  # subdirectories & use just_filename=$(basename "${a_file_name}")
   # Case 1: Add Day AND Rename files.
   # Case 2: Add Day. No Rename files.
   # Case 3: No add Day. Rename files.
-  # Case 4: No add Day. No Rename files.
-
-  day="${date_for_date_change:6:2}"
-  path_with_year_month_day="${just_path}/${year}/${month}/${day}"
-  path_with_year_month="${just_path}/${year}/${month}"
-  renamed_file_and_path="${a_file_name/IMG/$date_for_filename_change}"
 
   if [[ "${clean_day_subdir_also}" == 'y' && "${clean_rename_files_also}" == 'y' ]]; then
     # Add Day subsubdirectories so Year-Month-Day AND Rename Files with IMG in them.
@@ -180,10 +183,7 @@ while read -r a_file_name; do
   elif [ "${clean_rename_files_also}" == 'y' ]; then # ONLY rename files.
     # Replace IMG in filename with value in $datestring_for_filename, which is
     # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
-    path_for_subdirs_creation="${path_with_year_month}"
     just_filename=$(basename "${renamed_file_and_path}")
-  else # ONLY make Year-Month subdirectories.
-    path_for_subdirs_creation="${path_with_year_month}"
   fi
 
   new_dir_and_filename="${path_for_subdirs_creation}/${just_filename}"
