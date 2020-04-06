@@ -174,13 +174,11 @@ while read -r a_file_name; do
   # Case 2: Add Day. No Rename files.
   # Case 3: No add Day. Rename files.
 
-  if [[ "${clean_day_subdir_also}" == 'y' && "${clean_rename_files_also}" == 'y' ]]; then
+  if [ "${clean_day_subdir_also}" == 'y' ]; then
     # Add Day subsubdirectories so Year-Month-Day AND Rename Files with IMG in them.
     path_for_subdirs_creation="${path_with_year_month_day}"
-    just_filename="${just_renamed_file}"
-  elif [ "${clean_day_subdir_also}" == 'y' ]; then # ONLY add Day subdirectories.
-    path_for_subdirs_creation="${path_with_year_month_day}"
-  elif [ "${clean_rename_files_also}" == 'y' ]; then # ONLY rename files.
+  fi
+  if [ "${clean_rename_files_also}" == 'y' ]; then
     # Replace IMG in filename with value in $datestring_for_filename, which is
     # in the format: YYYY-MM-DD_HH-MM, e.g., 2016-01-27_08-15.
     just_filename="${just_renamed_file}"
