@@ -84,6 +84,7 @@ echo
 echo "SORTING files..."
 
 file_sort_counter=0
+start=$(date +%s)
 
 # Loop that processes entire given directory.
 while read -r a_file_name; do
@@ -199,6 +200,10 @@ done < <(find "${directory_path%/}" -maxdepth 1 -type f -name '*.jpg' -o -name '
   # ${file_sort_counter} is accessible vs. in a | subshell process.
 
 echo "DONE. Number of files sorted is: " "${file_sort_counter}"
+
+end=$(date +%s)
+difference=$((end - start))
+echo "Processing files took:" $((difference/60)) "min(s)" $((difference%60)) "sec(s)" 
 
 if [ "${file_sort_counter}" -eq 0 ]; then
   echo "There are no image files at the top-level of the path you typed."
