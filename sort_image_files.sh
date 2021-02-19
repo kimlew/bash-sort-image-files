@@ -5,18 +5,18 @@
 # BRIEF: Bash script that takes 3 command-line arguments or gives 3 prompts
 # to sort photo files.
 # Changes files that use download date as Creation Date, which is incorrect, to
-# photo-taken date. The script also: 
+# photo-taken date. The script also:
 # - creates subdirectories based on the Year & Month
 # - places files in subdirectories
 # - gives options to also create Day subdirectories or rename files with IMG in filename,
 # i.e., adds the photo-taken date, to the filename, e.g., 2015-09-02_07-09_0059.jpg
 #
-# Note: Photo-taken date is exif:DateTimeOriginal. If no exif:DateTimeOriginal, 
+# Note: Photo-taken date is exif:DateTimeOriginal. If no exif:DateTimeOriginal,
 # script uses date:modify.
 #
 # Author: Kim Lew
 
-if [ $# -gt 3 ]; then 
+if [ $# -gt 3 ]; then
   # Case of 4 or more parameters given.
   echo "Give 3 command-line arguments. Or give 0 arguments & get prompts."
   exit 1
@@ -43,7 +43,7 @@ else # Gave required 3 command-line arguments.
 fi
 
 if [ ! -d "$directory_path" ]; then
-    echo "This directory does NOT exist." 
+    echo "This directory does NOT exist."
     exit 1
 fi
 
@@ -79,7 +79,7 @@ function convert_yn() {
 
 clean_day_subdir_also=$(convert_yn "$day_subdir_also" '2nd parameter or answer to 2nd prompt')
 clean_rename_files_also=$(convert_yn "$rename_files_also" '3rd parameter or answer to 3rd prompt')
- 
+
 echo
 echo "SORTING files..."
 
@@ -89,11 +89,11 @@ start=$(date +%s)
 # Loop that processes entire given directory.
 while read -r a_file_name; do
   echo "Looking at file:" "${a_file_name}"
-  exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name" 2> /dev/null)" 
+  exif_date="$(identify -format '%[EXIF:DateTimeOriginal]' "$a_file_name" 2> /dev/null)"
   modify_date="$(identify -format '%[DATE:modify]' "$a_file_name" 2> /dev/null)"
   echo -e " Exif Date is: \t\t" "${exif_date}"
   echo -e " Modify Date is: \t" "${modify_date}"
-  
+
   if [[ "${exif_date}" == '' && "${modify_date}" == '' ]]; then
     # Give error if NO [EXIF:DateTimeOriginal] or [DATE:Modify].
     echo "Error: The file, $a_file_name"
@@ -106,7 +106,7 @@ while read -r a_file_name; do
     # Wanted Syntax: [[CC]YY]MMDDhhmm[.SS] Wanted Format: 2015-09-02_07-09_0060.jpg
     # 1. Replace ALL occurrences of : 	With: nothing
     # 2. Replace 1st occurrence of space 	With: nothing
-    # 3. Build string by deleting last 2 char at end. Then concat . & then concat 
+    # 3. Build string by deleting last 2 char at end. Then concat . & then concat
     # last 2 char, e.g., abc12 -> abc + . + 12 => abc.12
 
     date_for_date_change="${exif_date//:/}"
@@ -119,11 +119,11 @@ while read -r a_file_name; do
     # 1. Replace last 3 chars, e.g., :17	With: nothing
     # 2. Replace ALL : 	With: -
     # 3. Replace ALL spaces  With: _
-    
+
     date_for_filename_change="${exif_date/${exif_date: -3}}"
     date_for_filename_change="${date_for_filename_change//:/-}"
     date_for_filename_change="${date_for_filename_change// /_}"
-  
+
     # Build onto new_file_name. Concat to front - year & month.
     # Use: ${string:position:length}   On: 2015:09:02 07:09:03
     year="${exif_date:0:4}"
@@ -140,7 +140,7 @@ while read -r a_file_name; do
     date_for_date_change="${date_for_date_change//-/}" # Result: 20200208T16:02
     date_for_date_change="${date_for_date_change//T/}" # Result: 2020020816:02
     date_for_date_change="${date_for_date_change//:/}" # Result: 202002081602
-    
+
     # Prepare Filename Change that includes Date. Use modify_date, change format
     # & use in filename.
     # Given Format:  2018-10-09T18:42:41+00:00
@@ -151,7 +151,7 @@ while read -r a_file_name; do
     date_for_filename_change="${modify_date::-9}" # Result: 2018-10-09T18:42
     date_for_filename_change="${date_for_filename_change//T/-}" # Result: 2018-10-09_18:42
     date_for_filename_change="${date_for_filename_change//:/_}" # Result: 2018-10-09_18_42
-  
+
     # Build onto new_file_name. Concat to front - year & month.
     # Use: ${string:position:length}   On: 2018-10-09T18:42:41+00:00
     year="${modify_date:0:4}"
@@ -161,15 +161,15 @@ while read -r a_file_name; do
   just_path=$(dirname "${a_file_name}")
   just_filename=$(basename "${a_file_name}") # For path to move files into subdirectories
   day="${date_for_date_change:6:2}"
-  
+
   path_with_year_month_day="${just_path}/${year}/${month}/${day}"
   path_with_year_month="${just_path}/${year}/${month}"
-  
+
   path_for_subdirs_creation="${path_with_year_month}"
   just_renamed_file="${just_filename/IMG/$date_for_filename_change}"
 
   # 1 default case + 3 Option Cases to Add Day & Rename Files.
-  # Default Case: No add Day. No Rename files. ONLY make Year-Month 
+  # Default Case: No add Day. No Rename files. ONLY make Year-Month
   # subdirectories & use just_filename=$(basename "${a_file_name}")
   # Case 1: Add Day AND Rename files.
   # Case 2: Add Day. No Rename files.
@@ -203,7 +203,7 @@ echo "DONE. Number of files sorted is: " "${file_sort_counter}"
 
 end=$(date +%s)
 difference=$((end - start))
-echo "Processing files took:" $((difference/60)) "min(s)" $((difference%60)) "sec(s)" 
+echo "Processing files took:" $((difference/60)) "min(s)" $((difference%60)) "sec(s)"
 
 if [ "${file_sort_counter}" -eq 0 ]; then
   echo "There are no image files at the top-level of the path you typed."
